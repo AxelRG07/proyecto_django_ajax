@@ -1,0 +1,16 @@
+fieldset {
+  border: 1px solid #dee2e6;   /* Borde gris claro (Bootstrap-like) */
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  position: relative;
+}
+
+legend {
+  float: none;
+  width: auto;
+  padding: 0 10px;
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #000;
+  border: none;
+}

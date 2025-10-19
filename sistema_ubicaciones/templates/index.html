@@ -2,29 +2,80 @@
 {% load static %}
 
 {% block content %}
-    <button class="btn btn-primary" id="getEstados">Read</button>
 
-    <div class="container" id="estados-container">
-        <h1>Estado</h1>
-        <ul class="list-group list-group-flush" id ="estados-lista">
+    <div class="container mt-3">
+         <form id="addEstadoForm" class="container w-50 ">
+            <fieldset class="border rounded-3 p-3 shadow-sm">
+                <legend class="float-none w-auto px-2">Agregar Estado</legend>
+                <div class="col">
+                    <div class="mb-3">
+                    <label for="estadoInputPost" class="form-label">Nombre del estado</label>
+                    <input type="text" class="form-control" id="estadoInputPost" placeholder="Guanajuato">
+                    </div>
+                </div>
+
+                <div class="col">
+                    <button type="submit" class="btn btn-outline-primary">Registrar</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="container w-50 mt-lg-5 align-content-center" id="estados-container">
+        <h2>Estados Registrados</h2>
+        <ul class="list-group w-auto" id ="estados-lista">
 
         </ul>
     </div>
+
+    <div class="modal fade" id="municipiosModal" tabindex="-1" aria-labelledby="municipiosModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="municipiosModalLabel">Municipios</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="municipios-lista">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
 {% endblock %}
 
 {% block javascript %}
   <script>
     const allEstadosUrl = "{% url 'estados' %}";
+    const municipiosBaseUrl = "{% url 'municipios' 0 %}"; // base URL
   </script>
 
   <script src="{% static 'js/script.js' %}"></script>
 
   <script>
     (function() {
-      const readButton = document.getElementById("getEstados");
-      readButton.addEventListener("click", () => {
+      document.addEventListener("DOMContentLoaded", () => {
         getAllEstados(allEstadosUrl);
       });
+
+      const addEstadoForm = document.getElementById("addEstadoForm");
+      addEstadoForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const formData = {
+              nombre: addEstadoForm.elements["estadoInputPost"].value,
+          }
+
+          addEstado(allEstadosUrl, formData)
+          .then(function() {
+            console.log("Estado agregado correctamente");
+            addEstadoForm.reset();
+            getAllEstados(allEstadosUrl);
+          })
+          .catch(function(error) {
+            console.error("Error al agregar estado:", error);
+          });
+      });
+
     })();
   </script>
 {% endblock %}
