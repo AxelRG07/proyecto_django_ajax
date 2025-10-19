@@ -28,11 +28,13 @@ function getAllEstados(url) {
       return response.json();
     })
     .then(data => {
+      const estadoSelect = document.getElementById("estadoSelect");
       const lista = document.getElementById("estados-lista");
       lista.innerHTML = "";
 
       data.context.forEach(estado => {
         const li = document.createElement("li");
+        const option = document.createElement("option");
 
         const a = document.createElement("button");
         a.textContent = estado.nombre;
@@ -44,6 +46,12 @@ function getAllEstados(url) {
         li.classList.add("list-group-item");
         li.appendChild(a);
         lista.appendChild(li);
+
+        option.textContent = estado.nombre;
+        option.value = estado.id;
+
+        estadoSelect.appendChild(option)
+
       });
 
       //A cada botón se le asigna la respuesta al evento onClick
@@ -56,6 +64,8 @@ function getAllEstados(url) {
           })
       })
 
+
+
     })
     .catch(error => console.error("Error:", error));
 }
@@ -63,6 +73,25 @@ function getAllEstados(url) {
 //Registrar estado
 function addEstado(url, formData) {
   return fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    body: JSON.stringify(formData),
+  })
+  .then(function(response) {
+    if (!response.ok) {
+      throw new Error("Error al agregar estado");
+    }
+    return response.json();
+  });
+}
+
+function addMunicipio(url, formData) {
+    url = municipiosBaseUrl.replace("0", formData.estado);
+    return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -109,6 +138,8 @@ function cargarMunicipios(estadoId, estadoNombre) {
             }
             const modal = new bootstrap.Modal(document.getElementById("municipiosModal"));
             modal.show();
+
+
         })
         .catch(function (error) {
             console.error(error);

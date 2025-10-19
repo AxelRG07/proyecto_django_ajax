@@ -4,19 +4,33 @@
 {% block content %}
 
     <div class="container mt-3">
-         <form id="addEstadoForm" class="container w-50 ">
+         <form id="addEstadoForm" class="container w-50 mt-lg-5">
             <fieldset class="border rounded-3 p-3 shadow-sm">
                 <legend class="float-none w-auto px-2">Agregar Estado</legend>
                 <div class="col">
                     <div class="mb-3">
                     <label for="estadoInputPost" class="form-label">Nombre del estado</label>
-                    <input type="text" class="form-control" id="estadoInputPost" placeholder="Guanajuato">
+                    <input type="text" class="form-control" id="estadoInputPost" placeholder="Guanajuato" required>
                     </div>
                 </div>
 
                 <div class="col">
                     <button type="submit" class="btn btn-outline-primary">Registrar</button>
                 </div>
+            </fieldset>
+        </form>
+
+        <form id="addMunicipioForm" class="container w-50 mt-lg-5">
+            <fieldset class="border rounded-3 p-3 shadow-sm">
+                <legend class="float-none w-auto px-2">Agregar Municipio</legend>
+                <div class="input-group">
+                    <input type="text" class="form-control m-2" id="municipioInput" placeholder="Registrar municipio" required>
+                    <button type="submit" class="btn btn-outline-primary m-2">Agregar</button>
+                </div>
+                <select class="form-select form-select-lg mb-3" aria-label="Small select example" id="estadoSelect">
+                      <option selected class="form-control-color">Estado al que pertenece</option>
+
+                    </select>
             </fieldset>
         </form>
     </div>
@@ -35,7 +49,23 @@
             <h5 class="modal-title" id="municipiosModalLabel">Municipios</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+
           <div class="modal-body" id="municipios-lista">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="municipiosModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="municipiosModalLabel">Estatus</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body" id="estatus">
 
           </div>
         </div>
@@ -56,6 +86,7 @@
     (function() {
       document.addEventListener("DOMContentLoaded", () => {
         getAllEstados(allEstadosUrl);
+
       });
 
       const addEstadoForm = document.getElementById("addEstadoForm");
@@ -75,6 +106,33 @@
             console.error("Error al agregar estado:", error);
           });
       });
+
+      const addMunicipioForm = document.getElementById("addMunicipioForm");
+      addMunicipioForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const formData = {
+              nombre: addMunicipioForm.elements["municipioInput"].value,
+              estado: addMunicipioForm.elements["estadoSelect"].value,
+          }
+          addMunicipio(municipiosBaseUrl, formData)
+              .then(function() {
+                  console.log("municipio agregado correctamente");
+                  addMunicipioForm.reset();
+
+                  const modalTitle = document.getElementById("municipiosModalLabel")
+                  const modalBody = document.getElementById("estatus");
+
+                  modalBody.textContent = "Registro completado!";
+
+
+                  const modal = new bootstrap.Modal(document.getElementById("registroModal"));
+                  modal.show();
+
+              })
+              .catch(function(error) {
+                  console.error("Error al agregar municipio:", error);
+              })
+      })
 
     })();
   </script>

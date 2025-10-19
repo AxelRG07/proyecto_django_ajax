@@ -30,4 +30,11 @@ def municipios(request, estado_id):
             municipios = list(Municipio.objects.filter(estado_id=estado_id).values())
             return JsonResponse({'context':municipios})
 
+        elif request.method == "POST":
+            data = json.loads(request.body)
+            nombre = data.get('nombre')
+            estado = Estado.objects.get(id=estado_id)
+            municipio = Municipio.objects.create(nombre=nombre, estado=estado)
+            return JsonResponse({"id": municipio.id, "nombre": municipio.nombre})
+
     else: return HttpResponseBadRequest('Invalid Request')
