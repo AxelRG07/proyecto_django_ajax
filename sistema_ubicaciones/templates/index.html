@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <button class="btn btn-primary" id="getEstados">Read</button>
+
+    <div class="container" id="estados-container">
+        <h1>Estado</h1>
+        <ul class="list-group list-group-flush" id ="estados-lista">
+
+        </ul>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    const allEstadosUrl = "{% url 'estados' %}";
+  </script>
+
+  <script src="{% static 'js/script.js' %}"></script>
+
+  <script>
+    (function() {
+      const readButton = document.getElementById("getEstados");
+      readButton.addEventListener("click", () => {
+        getAllEstados(allEstadosUrl);
+      });
+    })();
+  </script>
+{% endblock %}
