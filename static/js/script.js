@@ -46,6 +46,7 @@ function getAllEstados(url) {
         lista.appendChild(li);
       });
 
+      //A cada botón se le asigna la respuesta al evento onClick
       const botones = lista.querySelectorAll("button")
       botones.forEach(function (btn) {
           btn.addEventListener("click", function() {
@@ -78,7 +79,7 @@ function addEstado(url, formData) {
   });
 }
 
-
+//función para cargar municipios
 function cargarMunicipios(estadoId, estadoNombre) {
     const url = municipiosBaseUrl.replace("0", estadoId);
     fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
